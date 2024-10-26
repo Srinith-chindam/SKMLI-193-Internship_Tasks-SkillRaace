@@ -1,0 +1,75 @@
+Tasks 1A
+
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+# Load dataset (replace with your dataset)
+data = pd.read_csv('your_dataset.csv')
+X = data.drop('target', axis=1)  # Features
+y = data['target']                # Target variable
+
+# Split the dataset into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Create a Decision Tree Classifier
+clf = DecisionTreeClassifier()
+clf.fit(X_train, y_train)
+
+# Make predictions
+y_pred = clf.predict(X_test)
+
+# Evaluate the model
+accuracy = accuracy_score(y_test, y_pred)
+report = classification_report(y_test, y_pred)
+
+print(f'Accuracy: {accuracy}')
+print('Classification Report:\n', report)
+
+
+Backpropogation algorithm using Ml fundamentals.
+import numpy as np
+
+class NeuralNetwork:
+    def __init__(self):
+        self.weights_input_hidden = np.random.rand(2, 2)  # 2 inputs to 2 hidden neurons
+        self.weights_hidden_output = np.random.rand(2, 1)  # 2 hidden neurons to 1 output neuron
+
+    def sigmoid(self, x):
+        return 1 / (1 + np.exp(-x))
+
+    def sigmoid_derivative(self, x):
+        return x * (1 - x)
+
+    def forward(self, inputs):
+        self.hidden_layer_activation = np.dot(inputs, self.weights_input_hidden)
+        self.hidden_layer_output = self.sigmoid(self.hidden_layer_activation)
+
+        self.output_layer_activation = np.dot(self.hidden_layer_output, self.weights_hidden_output)
+        return self.sigmoid(self.output_layer_activation)
+
+    def backward(self, inputs, expected_output, output):
+        error = expected_output - output
+        d_output = error * self.sigmoid_derivative(output)
+
+        error_hidden_layer = d_output.dot(self.weights_hidden_output.T)
+        d_hidden_layer = error_hidden_layer * self.sigmoid_derivative(self.hidden_layer_output)
+
+        # Update weights
+        self.weights_hidden_output += self.hidden_layer_output.T.dot(d_output)
+        self.weights_input_hidden += inputs.T.dot(d_hidden_layer)
+
+# Training data (XOR problem)
+inputs = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
+expected_output = np.array([[0], [1], [1], [0]])
+
+# Create and train neural network
+nn = NeuralNetwork()
+for epoch in range(10000):
+    output = nn.forward(inputs)
+    nn.backward(inputs, expected_output, output)
+
+print("Final Output after training:")
+print(nn.forward(inputs))
+
